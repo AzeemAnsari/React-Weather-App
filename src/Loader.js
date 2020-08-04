@@ -5,7 +5,7 @@ const Loader = (props) => {
     <div className="loader">
       <span>
         <img src={props.image} alt={props.alt} />{' '}
-        <span className="loadingText">Loading...</span>
+        <span className="loadingText">Loading</span>
       </span>
     </div>
   );

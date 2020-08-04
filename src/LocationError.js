@@ -3,12 +3,12 @@ import React from 'react';
 const LocationError = () => {
   return (
     <div className="locError card bg-primary shadow-soft border-light">
-      Please allow location access to get the current weather in your city
+      Please Turn On Location Services to Get the Current Weather in Your City
       <br />
       <span className="text-warning">- OR -</span>
       <br />
       <span className="text-primary">
-        Enter city name to get the current weather of the city
+        Enter City Name to Get the Current Weather of the City
       </span>
     </div>
   );

@@ -16,11 +16,12 @@ const API_KEY = process.env.REACT_APP_API_KEY;
 class App extends React.Component {
   constructor(props) {
     super(props);
+
     this.state = {
       data: {},
       coords: { latitude: '', longitude: '' },
       icon: '',
-      locationError: null,
+      locationError: false,
       cityError: null,
       loading: false,
       time: '',
@@ -102,6 +103,12 @@ class App extends React.Component {
     }
   }
 
+  // reload() {
+  //   setTimeout(() => {
+  //     window.location.reload();
+  //   }, 1000);
+  // }
+
   componentDidMount() {
     // Getting Current location
     this.setState({ loading: true });
@@ -118,7 +125,7 @@ class App extends React.Component {
           )
           .then((res) => {
             // console.log(res);
-            this.setState({ loading: false });
+            this.setState({ loading: false, locationError: false });
             let weatherInfo = {
               city: res.data.name,
               country: res.data.sys.country,
@@ -160,8 +167,7 @@ class App extends React.Component {
           });
       },
       (error) => {
-        // console.log(error.message);
-        this.setState({ locationError: error, loading: false });
+        this.setState({ locationError: true, loading: false });
       }
     );
   }
@@ -302,17 +308,12 @@ class App extends React.Component {
   render() {
     // const { temp, desc } = this.state.data;
     const { locationError, cityError, loading } = this.state;
-    const dayTime =
-      locationError || cityError
-        ? 'error'
-        : this.state.loading
-        ? 'loading'
-        : '';
+    const dayTime = locationError || cityError ? 'error' : '';
 
     return (
-      <>
+      <React.Fragment>
         <div className={`weatherContainer ${dayTime}`}>
-          {loading ? <Loader image={loader} alt="reactjs weather app" /> : ''}
+          {loading ? <Loader image={loader} alt="weather web app" /> : ''}
           <div className="main">
             <Form
               onFormSubmit={this.onCityChange}
@@ -331,7 +332,7 @@ class App extends React.Component {
             Azeem Ansari
           </a>
         </footer>
-      </>
+      </React.Fragment>
     );
   }
 }
