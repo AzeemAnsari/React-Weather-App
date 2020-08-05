@@ -32,6 +32,7 @@ class App extends React.Component {
       hour: '',
       tempToggle: false,
       inputError: false,
+      reload: false,
     };
 
     // Defining Icons
@@ -103,13 +104,17 @@ class App extends React.Component {
     }
   }
 
-  // reload() {
-  //   setTimeout(() => {
-  //     window.location.reload();
-  //   }, 1000);
-  // }
-
   componentDidMount() {
+    (function () {
+      if (window.localStorage) {
+        if (!localStorage.getItem('firstLoad')) {
+          localStorage['firstLoad'] = true;
+          window.location.reload();
+          console.log('loaded');
+        } else localStorage.removeItem('firstLoad');
+      }
+    })();
+
     // Getting Current location
     this.setState({ loading: true });
     navigator.geolocation.getCurrentPosition(
