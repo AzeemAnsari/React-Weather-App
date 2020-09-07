@@ -105,7 +105,8 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    (function () {
+    if (navigator.userAgent.match(/(iPhone|iPod|iPad)/)) {
+      (function () {
       if (window.localStorage) {
         if (!localStorage.getItem('firstLoad')) {
           localStorage['firstLoad'] = true;
@@ -113,7 +114,9 @@ class App extends React.Component {
           console.log('loaded');
         } else localStorage.removeItem('firstLoad');
       }
-    })();
+    })();  
+    }
+    
 
     // Getting Current location
     this.setState({ loading: true });
