@@ -7,7 +7,7 @@
 ## Introduction
 This is a code repository for the ReactJs Weather PWA. 
 
-In this app, I have used https://openweathermap.org/api api and trending Neumorphism design.
+In this app, I have used https://openweathermap.org/api api and trending Neumorphism design, main challenge was to show the current time of the target city.
 
 ### Setup:
 - run ```npm i && npm start``` for both client and server side to start the development server
