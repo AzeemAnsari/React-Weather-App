@@ -1,4 +1,4 @@
-# ReactJs Relaxer PWA
+# ReactJs Weather PWA
 
 ### [Live Site](https://weather.azeemansari.me/)
 
