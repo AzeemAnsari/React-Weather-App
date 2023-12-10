@@ -111,7 +111,6 @@ class App extends React.Component {
         if (!localStorage.getItem('firstLoad')) {
           localStorage['firstLoad'] = true;
           window.location.reload();
-          console.log('loaded');
         } else localStorage.removeItem('firstLoad');
       }
     })();  
@@ -331,7 +330,7 @@ class App extends React.Component {
           </div>
         </div>
         <footer>
-          &copy; 2020 -{' '}
+          &copy; {new Date().getFullYear()} -{' '}
           <a
             href="https://www.azeemansari.me"
             target="_blank"
