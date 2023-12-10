@@ -2,7 +2,7 @@
 
 ### [Live Site](https://weather.azeemansari.me/)
 
-![React Advice PWA](https://i.ibb.co/P4GqbNQ/Weather-App-by-Azeem-Ansari.png)
+![React Advice PWA](https://i.ibb.co/h20g78Y/Screen-Shot-2023-12-10-at-12-24-47-PM.png)
 
 ## Introduction
 This is a code repository for the ReactJs Weather PWA. 
