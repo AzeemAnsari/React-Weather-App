@@ -1,6 +1,6 @@
 # ReactJs Weather PWA
 
-### [Live Site](https://weather.azeemansari.me/)
+### [Live Site](https://weather.azeemansari.in/)
 
 ![React Advice PWA](https://i.ibb.co/h20g78Y/Screen-Shot-2023-12-10-at-12-24-47-PM.png)
 
