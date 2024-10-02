@@ -10,6 +10,7 @@
     "moment": "^2.27.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-google-autocomplete": "^2.7.3",
     "react-scripts": "3.4.1",
     "weather-icons": "git+https://github.com/erikflowers/weather-icons.git"
   },

@@ -189,10 +189,10 @@ class App extends React.Component {
   };
 
   // Weather Info on Input
-  onCityChange = (e) => {
+  onCityChange = (cityInput) => {
     this.setState({ inputError: false });
-    e.preventDefault();
-    let cityInput = e.target.elements.cityName.value;
+    // e.preventDefault();
+    // let cityInput = e.target.elements.cityName.value;
     if (cityInput === '') {
       this.setState({ inputError: true });
     }
@@ -254,8 +254,8 @@ class App extends React.Component {
           // console.log(err);
           this.setState({ cityError: err, loading: false });
         });
-      e.target.elements.cityName.value = '';
-      e.target.elements.cityName.blur();
+      // e.target.elements.cityName.value = '';
+      // e.target.elements.cityName.blur();
     }
   };
 
@@ -332,7 +332,7 @@ class App extends React.Component {
         <footer>
           &copy; {new Date().getFullYear()} -{' '}
           <a
-            href="https://www.azeemansari.me"
+            href="https://www.azeemansari.in"
             target="_blank"
             rel="noopener noreferrer"
           >
