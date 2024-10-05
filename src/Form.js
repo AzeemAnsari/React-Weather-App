@@ -1,5 +1,6 @@
 import React from 'react';
 import {Autocomplete, usePlacesWidget} from "react-google-autocomplete";
+import currLocation from './images/curr_location.svg';
 
 const Form = (props) => {
   const { ref, autocompleteRef } = usePlacesWidget({
@@ -13,7 +14,10 @@ const Form = (props) => {
       if (ref.current) {
         ref.current.value = "";
       }
-    }
+    },
+    options: {
+      types: ['(cities)'], // You can limit the autocomplete to cities
+    },
   });
 
   const handleKeyDown = (e) => {
@@ -43,6 +47,9 @@ const Form = (props) => {
             placeholder="Enter City Name"
             onKeyDown={handleKeyDown}
           />
+          <button type='button' className='btn btn-primary' style={{padding:'0 1.5rem'}} onClick={props.handleCurrentLocation}>
+            <img src={currLocation} alt="Current Location" style={{width:'27px'}} />
+          </button>
           {/* <button type="submit" className="btn btn-primary">
             Search
           </button> */}
