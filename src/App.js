@@ -141,16 +141,17 @@ class App extends React.Component {
     // })();  
     // }
 
-    if (navigator.userAgent.match(/(iPhone|iPod|iPad)/)) {
+    if (navigator.userAgent.match(/(iPhone|iPod|iPad|Macintosh)/)) {
       if (window.localStorage) {
         if (!localStorage.getItem('firstLoad')) {
           localStorage.setItem('firstLoad', 'true');
-          // console.log("First load detected, performing actions...");
+          // No page reload here
         } else {
           localStorage.removeItem('firstLoad');
         }
       }
     }
+    
     
 
     // Getting Current location
