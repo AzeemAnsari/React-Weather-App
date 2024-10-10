@@ -9,7 +9,7 @@ const Form = (props) => {
       // console.log(place);
       // console.log(autocompleteRef);
       if(!place.name){
-        props.onFormSubmit(place?.address_components[0]?.long_name);
+        props.onFormSubmit(null, place?.address_components[0]?.long_name);
       }
       if (ref.current) {
         ref.current.value = "";

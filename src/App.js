@@ -129,18 +129,96 @@ class App extends React.Component {
     }
   };
 
-  componentDidMount() {
-    // if (navigator.userAgent.match(/(iPhone|iPod|iPad)/)) {
-    //   (function () {
-    //   if (window.localStorage) {
-    //     if (!localStorage.getItem('firstLoad')) {
-    //       localStorage['firstLoad'] = true;
-    //       window.location.reload();
-    //     } else localStorage.removeItem('firstLoad');
-    //   }
-    // })();  
-    // }
+  handleCurrentLocation = () => {
+    const storedCoords = sessionStorage.getItem('curLocation');
+  
+    if (storedCoords) {
+      // If coordinates exist in sessionStorage, use them
+      const coords = JSON.parse(storedCoords);
+      
+      // Call the weather API with the stored coordinates
+      this.fetchWeatherData(coords);
+    } else {
+      // Handle case where coordinates are not available
+      console.error('No coordinates found in session storage. Please enable location access or fetch the coordinates.');
+      window.location.reload();
+    }
+  };
 
+  fetchWeatherData = (coords) => {
+    axios
+      .get(
+        `https://api.openweathermap.org/data/2.5/weather?lat=${coords.latitude}&lon=${coords.longitude}&units=metric&appid=${API_KEY}`
+      )
+      .then((res) => {
+        const geocoder = new window.google.maps.Geocoder();
+        const latLng = { lat: coords.latitude, lng: coords.longitude };
+  
+        geocoder.geocode({ location: latLng }, (results, status) => {
+          if (status === 'OK' && results[0]) {
+            const addressComponents = results[0].address_components;
+  
+            // Find and extract the city name from the address components
+            const city = addressComponents.find((component) =>
+              component.types.includes('locality')
+            )?.long_name;
+  
+            if (city) {
+              this.setState({ currCity: city });
+              let weatherInfo = {
+                city: city,
+                country: res.data.sys.country,
+                temp: Math.round(res.data.main.temp),
+                minTemp: Math.round(res.data.main.temp_min),
+                maxTemp: Math.round(res.data.main.temp_max),
+                desc: res.data.weather[0].description,
+                wind: res.data.wind.speed,
+                humidity: res.data.main.humidity,
+                pressure: res.data.main.pressure,
+              };
+              this.setState({ data: weatherInfo, currLoc: true, tempToggle: false });
+              const timeZone = res.data.timezone / 60;
+              // Update date and time based on the API response
+              const currDate = moment().format('dddd, Do MMMM YYYY');
+              // const currTime = moment()
+              //   .utcOffset(res.data.timezone / 60)
+              //   .format('hh:mm A');
+              const currTime = moment().utcOffset(timeZone).format('h:mm A'); //Z to get the Timezone
+              const sunriseTime = moment(new Date(res.data.sys.sunrise * 1000))
+                .utcOffset(res.data.timezone / 60)
+                .format('hh:mm A');
+              const sunsetTime = moment(new Date(res.data.sys.sunset * 1000))
+                .utcOffset(res.data.timezone / 60)
+                .format('hh:mm A');
+  
+              this.setState({
+                date: currDate,
+                time: currTime,
+                sunrise: sunriseTime,
+                sunset: sunsetTime,
+                loading: false,
+                locationError: false,
+              });
+  
+              const getHours = moment()
+                .utcOffset(res.data.timezone / 60)
+                .hours();
+              this.get_Icons(this.weatherIcon, res.data.weather[0].id, getHours);
+              this.setState({ hour: getHours });
+            } else {
+              console.error('City not found in the address components.');
+            }
+          } else {
+            console.error('Geocoder failed due to:', status);
+          }
+        });
+      })
+      .catch((error) => {
+        console.error('Error fetching weather data:', error);
+      });
+  };
+
+  componentDidMount() {
     if (navigator.userAgent.match(/(iPhone|iPod|iPad|Macintosh)/)) {
       if (window.localStorage) {
         if (!localStorage.getItem('firstLoad')) {
@@ -151,8 +229,6 @@ class App extends React.Component {
         }
       }
     }
-    
-    
 
     // Getting Current location
     this.setState({ loading: true });
@@ -165,73 +241,10 @@ class App extends React.Component {
             longitude: position.coords.longitude,
           };
           this.setState({ coords: newCoords });
-    
-          axios
-            .get(
-              `https://api.openweathermap.org/data/2.5/weather?lat=${newCoords.latitude}&lon=${newCoords.longitude}&units=metric&appid=${API_KEY}`
-            )
-            .then((res) => {
-              const geocoder = new window.google.maps.Geocoder();
-              const latLng = { lat: newCoords.latitude, lng: newCoords.longitude };
-    
-              geocoder.geocode({ location: latLng }, (results, status) => {
-                if (status === 'OK' && results[0]) {
-                  const addressComponents = results[0].address_components;
-    
-                  // Find and extract the city name from the address components
-                  const city = addressComponents.find((component) =>
-                    component.types.includes('locality')
-                  )?.long_name;
-    
-                  if (city) {
-                    this.setState({ currCity: city });
-                    let weatherInfo = {
-                      city: city, // Use the city retrieved from Geocoder
-                      country: res.data.sys.country,
-                      temp: Math.round(res.data.main.temp),
-                      minTemp: Math.round(res.data.main.temp_min),
-                      maxTemp: Math.round(res.data.main.temp_max),
-                      desc: res.data.weather[0].description,
-                      wind: res.data.wind.speed,
-                      humidity: res.data.main.humidity,
-                      pressure: res.data.main.pressure,
-                    };
-                    this.setState({ data: weatherInfo, currLoc: true });
-    
-                    // Set other state values based on the API response
-                    const currDate = moment().format('dddd, Do MMMM YYYY');
-                    const currTime = moment()
-                      .utcOffset(res.data.timezone / 60)
-                      .format('hh:mm A');
-                    const sunriseTime = moment(new Date(res.data.sys.sunrise * 1000))
-                      .utcOffset(res.data.timezone / 60)
-                      .format('hh:mm A');
-                    const sunsetTime = moment(new Date(res.data.sys.sunset * 1000))
-                      .utcOffset(res.data.timezone / 60)
-                      .format('hh:mm A');
-    
-                    this.setState({
-                      date: currDate,
-                      time: currTime,
-                      sunrise: sunriseTime,
-                      sunset: sunsetTime,
-                      loading: false,
-                      locationError: false,
-                    });
-    
-                    const getHours = moment()
-                      .utcOffset(res.data.timezone / 60)
-                      .hours();
-                    this.get_Icons(this.weatherIcon, res.data.weather[0].id, getHours);
-                    this.setState({ hour: getHours });
-                  } else {
-                    console.error('City not found in the address components.');
-                  }
-                } else {
-                  console.error('Geocoder failed due to:', status);
-                }
-              });
-            });
+          if(!sessionStorage.getItem('curLocation')){
+            sessionStorage.setItem('curLocation', JSON.stringify(newCoords));
+          }
+          this.fetchWeatherData(newCoords);
         },
         (error) => {
           console.log(error);
@@ -252,17 +265,16 @@ class App extends React.Component {
     this.setState({ tempToggle: true });
   };
 
-  handleCurrentLocation = () => {
-    window.location.reload();
-  };
-
   // Weather Info on Input
-  onCityChange = (cityInput) => {
+  onCityChange = (e, cityInput) => {
+    console.log(e, cityInput);
+    
     this.setState({ inputError: false });
     // e.preventDefault();
     // let cityInput = e.target.elements.cityName.value;
     if (cityInput === '') {
       this.setState({ inputError: true });
+      e.preventDefault();
     }
     if (cityInput !== '') {
       this.setState({

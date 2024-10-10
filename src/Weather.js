@@ -38,8 +38,8 @@ class Weather extends React.Component {
         ) : !currLoc && country ? (
           <div className="dateTime">
             <div className="date">{date}</div>
-            <div className="flex center">
-              <span className="time badge badge-lg badge-success">{time}</span>
+            <div className="center time">
+              <span className="badge badge-lg badge-success">{time}</span>
             </div>
           </div>
         ) : (
